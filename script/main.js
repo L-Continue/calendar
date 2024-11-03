@@ -2,7 +2,7 @@
  * Created on 02:58:49 Sat 2024-10-26, By L-Continue
  * Copyright (C) 2024 shiyao.space All rights reserved.
  * @Last Modified by:   L-Continue
- * @Last Modified time: 05:31:49 Mon 2024-11-04
+ * @Last Modified time: 06:07:44 Mon 2024-11-04
  */
 
 $.fn.visible = function (boolean = false) {
@@ -235,6 +235,4 @@ $(function () {
   Html.create();
   Html.update();
   setInterval(Html.update, 500);
-  // setInterval(() => { stFromMon = !stFromMon; }, 2000);
-  console.log(Data());
 });
