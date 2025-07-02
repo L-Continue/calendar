@@ -1,8 +1,13 @@
 /*
- * Created on 02:58:49 Sat 2024-10-26, By L-Continue
+ * Created on 01:45:16 Thu 2025-07-03, By L-Continue
  * Copyright (C) 2024 shiyao.space All rights reserved.
  * @Last Modified by:   L-Continue
- * @Last Modified time: 15:24:19 Mon 2024-11-04
+ * @Last Modified time: 01:58:58 Thu 2025-07-03
+ */
+
+/**
+ * 日历应用核心逻辑文件
+ * 处理日期计算、日历渲染和生日提醒功能
  */
 
 $.fn.visible = function (boolean = false) {
@@ -17,12 +22,10 @@ let daysRange = 15;
 let stFromMon = true;
 
 // 特殊日期和生日
-// prettier-ignore
 const specialEvents = [
   '信用卡:13',
   '收房租:20',
 ];
-// prettier-ignore
 const birthdaysList = [
   '瑶瑶爷爷:1955-05-03',
   '瑶瑶奶奶:1956-04-25',
@@ -32,7 +35,10 @@ const birthdaysList = [
   '瑶瑶宝宝:2015-08-27',
 ];
 
-// 构建数据
+/**
+ * 构建日历应用所需的所有数据
+ * @returns {Object} 包含时间、日期、日历和生日列表的数据对象
+ */
 function Data() {
   const time = {
     h: moment().format('HH'),
@@ -51,6 +57,11 @@ function Data() {
   return { time, date, thisCalendar, fullCalendar, list };
 }
 
+/**
+ * 生成指定月份的日历数据
+ * @param {number} index - 月份索引（0-11）
+ * @returns {Object} 包含月份名称、星期标题和日期单元格数据的对象
+ */
 function Calendar(index) {
   const m = Number.isInteger(index) ? moment().month(index) : moment();
   const mths = m.format('M月');
@@ -94,7 +105,12 @@ function Calendar(index) {
   return { month: mths, head, main };
 }
 
-// 月历中农历的文本处理
+/**
+ * 将公历日期转换为农历显示
+ * @param {string} date - 公历日期字符串（格式：YYYY/MM/DD）
+ * @param {boolean} isFullDisplay - 是否显示完整农历信息
+ * @returns {string} 农历日期显示字符串
+ */
 function Lunar(date, isFullDisplay) {
   const [Y, M, D] = date.split('/');
   const lunar = calendar.solar2lunar(Y, M, D);
@@ -105,7 +121,11 @@ function Lunar(date, isFullDisplay) {
   return isFullDisplay ? fullDisplay : dateDisplay;
 }
 
-// 解析日期字符串
+/**
+ * 解析日期字符串为标签和日期组件
+ * @param {string} entry - 日期字符串，格式为"标签:日期"
+ * @returns {Object} 包含标签、月份和日期的对象
+ */
 function ParseDateString(entry) {
   const [label, val] = entry.split(':');
   const [month, day] = val.includes('-') ? val.split('-').map(Number).slice(1) : [null, Number(val)];
@@ -113,7 +133,12 @@ function ParseDateString(entry) {
   return val.includes('-') ? { label, month, day } : { label, day };
 }
 
-// 计算生日差异
+/**
+ * 计算生日距离今天的天数和年龄
+ * @param {string} name - 姓名
+ * @param {string} date - 生日日期字符串（格式：YYYY-MM-DD）
+ * @returns {Object} 包含生日相关信息的对象
+ */
 function Difftime(name, date) {
   if (!name || !date) return false;
 
@@ -134,9 +159,12 @@ function Difftime(name, date) {
   return { name, ages, date, next, progressVal, progressMax, tips, isClose, isToday };
 }
 
+/**
+ * HTML渲染和更新相关方法
+ */
 const Html = {
+  // 创建日历应用的DOM结构
   create() {
-    // prettier-ignore
     const { time, date, thisCalendar: { head, main }, fullCalendar, list } = Data();
 
     // 主体部分
@@ -181,7 +209,6 @@ const Html = {
       const $head = $('<div class="head"/>').appendTo($days);
       const $main = $('<div class="main"/>').appendTo($days);
 
-      // $head.text(val.month);
       $.each(combArr, (i, arr) => $('<span/>').appendTo($main));
     });
 
@@ -190,8 +217,8 @@ const Html = {
     $('<progress class="weekBar"/>').insertAfter($head);
   },
 
+  // 更新日历应用的DOM内容
   update() {
-    // prettier-ignore
     const { time, date, thisCalendar: { head, main }, fullCalendar, list } = Data();
 
     // 主体部分
